@@ -24,6 +24,8 @@ dependencies = [
     "numpy",
     "pyglet >= 2.0.10",
     "pandas"
+    "ipywidgets"
+    "ipympl"
 ]
 
 [tool.setuptools.packages.find]
