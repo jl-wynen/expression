@@ -23,8 +23,8 @@ dependencies = [
     "matplotlib",
     "numpy",
     "pyglet >= 2.0.10",
-    "pandas"
-    "ipywidgets"
+    "pandas",
+    "ipywidgets",
     "ipympl"
 ]
 
