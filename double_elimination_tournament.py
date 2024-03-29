@@ -28,7 +28,7 @@ class Match:
     def __repr__(self):
         return f"top:{self.top}, bottom:{self.bottom}, number: {self.number}"
 
-code_names = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"]
+code_names =   ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"]
 match_plan = [Match("A", "B", 1),
               Match("C", "D", 2),
               Match("E", "F", 3),
@@ -170,7 +170,7 @@ for match_index in range(highest_match_index, 31):
         game_window.clear()
         top_score, bottom_score = run_expression(game_window=game_window,
                                                  tournament_state=tournament_state,
-                                                 match_number=match_index,
+                                                 match_number=str(match_index),
                                                  positive_player=top_contestant_agent,
                                                  negative_player=bottom_contestant_agent)
 

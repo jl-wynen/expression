@@ -19,7 +19,8 @@ from game.bracket import DoubleBracket
 
 def run_expression(game_window, score_limit=2, tournament_state=None, match_number=None,
                    negative_player=None, negative_deck=None,
-                   positive_player=None, positive_deck=None):
+                   positive_player=None, positive_deck=None,
+                   auto_play_input=False):
 
     #inputs_global
     global global_negative_player, global_positive_player, global_negative_deck, global_positive_deck
@@ -28,8 +29,9 @@ def run_expression(game_window, score_limit=2, tournament_state=None, match_numb
     global_positive_player = positive_player
     global_positive_deck = positive_deck
 
-    global global_tournament_state
+    global global_tournament_state, global_match_number
     global_tournament_state = tournament_state
+    global_match_number = match_number
 
     # Set up game window
     #game_window = pyglet.window.Window(1280, 800)
@@ -257,18 +259,19 @@ def run_expression(game_window, score_limit=2, tournament_state=None, match_numb
         """
 
         # bracket
-        global bracket, bracket_mode
-        bracket = DoubleBracket(tournament_state=global_tournament_state, batch=bracket_batch)
+        global bracket, bracket_mode, global_match_number
+        bracket = DoubleBracket(tournament_state=global_tournament_state,
+                                batch=bracket_batch, match_number=global_match_number)
         bracket.setup()
         bracket.update_with_state()
-        if tournament_state is not None:
+        if tournament_state is not None and player_top_score == 0 and player_bottom_score == 0:
             bracket_mode = True
         else:
             bracket_mode = False
 
         # Start a game
         global game
-        game = engine.Game(2.0, player_top, player_bottom)
+        game = engine.Game(100.0, player_top, player_bottom)
         game.setup_game()
 
         # continue_turn: used to manually click through turns
@@ -281,7 +284,7 @@ def run_expression(game_window, score_limit=2, tournament_state=None, match_numb
         took_turn = True
 
         # Set these to False to have default mode being manual
-        auto_play = continue_turn = True
+        auto_play = continue_turn = auto_play_input
 
     @game_window.event
     def on_mouse_press(x, y, button, modifiers):
@@ -313,8 +316,11 @@ def run_expression(game_window, score_limit=2, tournament_state=None, match_numb
         if symbol == key.ENTER:
             auto_play = not auto_play
 
-            if not continue_turn:
-                continue_turn = True
+            if auto_play:
+                if not continue_turn:
+                    continue_turn = True
+            else:
+                continue_turn = False
 
         if symbol == key.UP:
             turn_time += 0.5
@@ -388,6 +394,7 @@ def run_expression(game_window, score_limit=2, tournament_state=None, match_numb
             game.switch_current_player()
             term_text.target_pos = game.current_player.po.term_text_position
             game.ready_turn()
+            game.current_player.po.energy_bar.set_used(game.current_player.max_resources)
 
             turn_time_left = turn_time
             took_turn = False
@@ -537,17 +544,10 @@ def run_expression(game_window, score_limit=2, tournament_state=None, match_numb
     #                                RUNNING THE GAME                                   #
     #####################################################################################
 
-    print("pre init")
+
     init()
-    print("performed init")
-
-    # 120 FPS target
     pyglet.clock.schedule_interval(update, 1/30.0)
-
-    print("starting app")
     pyglet.app.run()
-
-    print("finished")
 
     print("final score = " + str(player_top_score) + " - " + str(player_bottom_score))
 

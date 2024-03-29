@@ -34,6 +34,11 @@ class Card:
         if self.operator == "+":
             self.operator = "-"
 
+    def __eq__(self, other):
+        if isinstance(other, Card):
+            return cards_equal(self, other)
+        return False
+
     def __repr__(self):
         return self.return_print()
 

@@ -151,7 +151,7 @@ class Player:
                     card_element.make_negative()
 
         agent_answer = self.agent.play_turn(hand=given_hand, energy=energy, game_info=game_info,
-                                            current_value=current_value, current_term=current_term)
+                                            locked_term=current_value, current_term=current_term)
 
         if agent_answer is None:
             self.record_energy_spent(0)
