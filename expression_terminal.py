@@ -4,21 +4,21 @@ import json
 
 from game import player
 from game import engine
-from game import make_deck
-from game import template_AI
+from contestants import template_fast
+from contestants import template_careful
 
 
 def run_expression_terminal(n_runs=2000, verbose=False, pause=True, save=True,
                             top_agent=None, bottom_agent=None):
     # Make decks
     if top_agent is None:
-        top_agent = template_AI.template_AI_A()
+        top_agent = template_fast.Agent()
 
     top_agent.select_cards()
     top_deck = top_agent.make_deck()
 
     if bottom_agent is None:
-        bottom_agent = template_AI.template_AI_B()
+        bottom_agent = template_careful.Agent()
 
     bottom_agent.select_cards()
     bottom_deck = bottom_agent.make_deck()

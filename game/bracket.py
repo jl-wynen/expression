@@ -315,9 +315,6 @@ class DoubleBracket:
                                                         batch=self.batch,
                                                         color=(255, 255, 255, 255))
 
-        for match in self.all_matches:
-            print(match)
-
     def update_with_state(self):
 
         if self.tournament_state is None:

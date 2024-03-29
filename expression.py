@@ -16,6 +16,9 @@ from game import graph
 from game import moving_text
 from game.bracket import DoubleBracket
 
+from contestants import template_fast
+from contestants import template_reckless
+
 
 def run_expression(game_window, score_limit=2, tournament_state=None, match_number=None,
                    negative_player=None, negative_deck=None,
@@ -171,7 +174,7 @@ def run_expression(game_window, score_limit=2, tournament_state=None, match_numb
             top_agent.select_cards()
             global_positive_deck = top_agent.make_deck()
         elif global_positive_deck is None:
-            tmp_agent = template_AI.template_AI_A()
+            tmp_agent = template_fast.Agent()
             tmp_agent.select_cards()
             global_positive_deck = tmp_agent.make_deck()
 
@@ -210,9 +213,9 @@ def run_expression(game_window, score_limit=2, tournament_state=None, match_numb
             bottom_agent.select_cards()
             global_negative_deck = bottom_agent.make_deck()
         elif global_negative_deck is None:
-                tmp_agent = template_AI.template_AI_A()
-                tmp_agent.select_cards()
-                global_negative_deck = tmp_agent.make_deck()
+            tmp_agent = template_reckless.Agent()
+            tmp_agent.select_cards()
+            global_negative_deck = tmp_agent.make_deck()
 
         player_bottom = player.Player("Human negative", copy.deepcopy(global_negative_deck), is_negative=True,
                                       agent=global_negative_player,
