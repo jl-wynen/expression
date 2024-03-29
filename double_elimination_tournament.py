@@ -61,7 +61,7 @@ match_plan = [Match("A", "B", 1),
               Match("W27", "W29", 30)
               ]
 
-second_finals = Match("W30", "L30", 31)
+second_finals = Match("W30", "L30", 31) # if W30 is the W29 player
 
 contestants = [template_fast.Agent, template_reckless.Agent, template_careful.Agent]
 
@@ -123,6 +123,8 @@ if os.path.isfile(tournament_results):
     for match in match_plan:
         match.update(tournament_status)
 
+    second_finals.update(tournament_status)
+
     highest_match_index = 0
     for match_string in tournament_status:
         number_part = match_string[1:]
@@ -134,19 +136,11 @@ if os.path.isfile(tournament_results):
 
 else:
     # exchange letters with agent names
-    print("spot assignments")
-    print(spot_assignments)
-    print("--"*100)
-
     for match in match_plan:
         match.update(spot_assignments)
 
     tournament_status = {}
     highest_match_index = 1
-
-
-for match in match_plan:
-    print(match)
 
 
 game_window = pyglet.window.Window(1280, 800)
@@ -196,62 +190,44 @@ for match_index in range(highest_match_index, 31):
     for match in match_plan:
         match.update(tournament_status)
 
+    second_finals.update(tournament_status)
+
     with open(tournament_results, "w") as f:
         json.dump(tournament_status, f)
 
-"""
-class Match:
-    def __init__(self, player1_name, player1, player2_name, player2):
-        self.player1_name = player1_name
-        self.player1 = player1
-        self.player2_name = player2_name
-        self.player2 = player2
 
-matches = []
-with open(tournament_plan, "r") as plan_file:
-    match_line = plan_file.readline() # ignore first line with best of number
-    match_line = plan_file.readline() # ignore second line with contestants names
-    match_line = plan_file.readline()
-    while match_line:
-        player1_name = match_line.split(" ", 1)[0].strip()
-        player2_name = match_line.split(" ")[-1].strip()
+# code for detecting if last match needed
 
-        player1 = None
-        player2 = None
-        for contestant in contestants:
-            contestant_name = contestant.__module__.split(".")[1].strip()
-            if contestant_name == player1_name:
-                player1 = contestant
-            if contestant_name == player2_name:
-                player2 = contestant
-        if player1 is None or player2 is None:
-            print("ERROR, didn't find both players for match!")
-            print("player1: " + player1_name)
-            print("player2: " + player2_name)
-        matches.append(Match(player1_name, player1, player2_name, player2))
-        match_line = plan_file.readline()
+# if W30 is the W29 player
+if tournament_status["W30"] == tournament_status["W29"]:
+    # Need to run a last game
 
-# Run tournament with filename, produce result file
-if os.path.isfile(tournament_results):
-    match_index_start = sum(1 for line in open(tournament_results))
-else:
-    match_index_start = 0
-    result_file = open(tournament_results, "w")
-    result_file.close()
+    top_contestant_agent = contestant_agents[second_finals.top]()
+    bottom_contestant_agent = contestant_agents[second_finals.bottom]()
 
+    tournament_state = {}
+    tournament_state.update(spot_assignments)
+    tournament_state.update(tournament_status)
 
-game_window = pyglet.window.Window(1280, 800)
-game_window.set_vsync(False)
-for match_index in range(match_index_start, len(matches)):
-    match = matches[match_index]
-    print("Running " + match.player1_name + " vs " + match.player2_name)
+    print(f"player {second_finals.top} vs {second_finals.bottom}")
+
     game_window.clear()
-    result = run_expression(game_window=game_window,
-                            negative_player=match.player1(), positive_player=match.player2())
-    #game_window.close()
-    # Need to check max result = score limit
-    result_file = open(tournament_results, "a")
-    result_file.write(match.player1_name + " vs " + match.player2_name + ": " + str(result[0]) + " - " + str(result[1]) + "\n")
-    result_file.close()
-"""
+    top_score, bottom_score = run_expression(game_window=game_window,
+                                             tournament_state=tournament_state,
+                                             match_number=str(31),
+                                             positive_player=top_contestant_agent,
+                                             negative_player=bottom_contestant_agent)
+
+    if top_score > bottom_score:
+        tournament_status["W" + str(31)] = second_finals.top
+        tournament_status["L" + str(31)] = second_finals.bottom
+    else:
+        tournament_status["L" + str(31)] = second_finals.top
+        tournament_status["W" + str(31)] = second_finals.bottom
+
+    print("Winner: ", tournament_status["W31"])
+
+else:
+    # Winner bracket from 27 won
+    print("Winner: ", tournament_status["W30"])
 

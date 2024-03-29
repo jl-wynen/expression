@@ -341,13 +341,9 @@ class DoubleBracket:
 
                 player_name = self.tournament_state[match_code]
 
-                print("adjusting: ", match, match_code, player_name)
-                print(match.top_player_label.text)
-                print(match.bottom_player_label.text)
                 if match.top_player_label.text == player_name:
-                    print("top sat")
+
                     match.top_player_label.opacity = 130
 
                 if match.bottom_player_label.text == player_name:
-                    print("bottom sat")
                     match.bottom_player_label.opacity = 130

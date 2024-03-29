@@ -11,7 +11,6 @@ from game import engine
 from game import make_deck
 from game import util
 from game import player_objects
-from game import template_AI
 from game import graph
 from game import moving_text
 from game.bracket import DoubleBracket
