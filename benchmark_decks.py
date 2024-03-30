@@ -62,9 +62,32 @@ def make_decks(n_decks):
         yield dict(counter.items())
 
 
+def modified_decks(base, n):
+    base = dict(base.items())
+    for name in CARD_NAMES:
+        base.setdefault(name, 0)
+
+    decks = []
+    for _ in range(n):
+        deck = dict(base.items())
+        for _ in range(random.randint(1, 6)):
+            name = random.choice(CARD_NAMES)
+            if deck[name] > 0:
+                deck[name] += random.choice([-1, 1])
+            else:
+                deck[name] += 1
+        n_cards = sum(deck.values())
+        for _ in range(15-n_cards):
+            deck[random.choice(CARD_NAMES)] += 1
+        decks.append(deck)
+
+    return decks
+
+
 def main() -> None:
     random.seed(712)
-    decks = list(make_decks(50))
+    decks = list(make_decks(0))
+    decks.extend(modified_decks(CUSTOM_DECKS[-1], 30))
     decks.extend(CUSTOM_DECKS)
 
     results = [
