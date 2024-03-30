@@ -1,6 +1,5 @@
 import functools
 import itertools
-import multiprocessing as mp
 
 import numpy as np
 
@@ -8,21 +7,24 @@ from game import base_agent, helpers
 
 
 class Agent(base_agent.BaseAgent):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, deck=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.name = "Jankas"
-        # self.pool = mp.Pool(processes=4)
+        self._user_deck = deck
 
     def select_cards(self):
-        self.deck = dict(
-            plus1=4,
-            plus5=5,
-            plus10=3,
-            mult3=6,
-            mult10=3,
-            div5=2,
-            div10=1,
-        )
+        if self._user_deck is not None:
+            self.deck = dict(self._user_deck)
+        else:
+            self.deck = dict(
+                plus1=4,
+                plus5=5,
+                plus10=3,
+                mult3=6,
+                mult10=3,
+                div5=2,
+                div10=1,
+            )
 
     def play_turn(self, hand, energy, game_info, locked_term, current_term):
         eligible = [card for card in hand if card.cost <= energy]
@@ -39,8 +41,6 @@ def highest_value_play(hand, energy, locked_term, current_term):
     candidate_value = locked_term + current_term
     candidate_cost = 0
     kernel = functools.partial(check_play, energy=energy, locked_term=locked_term, current_term=current_term)
-    # results = pool.map(kernel, card_permutations(hand), chunksize=20)
-    # results = pool.imap(kernel, card_permutations(hand), chunksize=20)
     results = map(kernel, card_permutations(hand))
 
     for to_play, score, cost in results:

@@ -95,6 +95,7 @@ def parse_args():
     parser.add_argument('--pause', action='store_true')
     parser.add_argument('--bottom_agent', type=str)
     parser.add_argument('--seed', type=int, default=None)
+    parser.add_argument('--deck', type=parse_deck)
     args = parser.parse_args()
     return args
 
@@ -110,6 +111,10 @@ def make_agent(agent_name):
         raise ValueError(f"Unknown agent: {agent_name}")
 
 
+def parse_deck(deck):
+    return {x.split('=')[0]: int(x.split('=')[1]) for x in deck.split(',')}
+
+
 def main() -> None:
     args = parse_args()
     if args.seed is not None:
@@ -117,7 +122,7 @@ def main() -> None:
     top_score, bottom_score, _ = run_expression_terminal(n_runs=args.n_runs,
                                                          verbose=args.verbose,
                                                          pause=args.pause,
-                                                         top_agent=jankas.Agent(),
+                                                         top_agent=jankas.Agent(deck=args.deck),
                                                          bottom_agent=make_agent(args.bottom_agent),
                                                          )
     print(f'{top_score},{bottom_score}')
