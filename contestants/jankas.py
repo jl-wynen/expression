@@ -28,7 +28,22 @@ class Agent(base_agent.BaseAgent):
 
     def play_turn(self, hand, energy, game_info, locked_term, current_term):
         eligible = [card for card in hand if card.cost <= energy]
-        return highest_value_play(eligible, energy, locked_term, current_term)
+        play = highest_value_play(eligible, energy, locked_term, current_term)
+
+        cost = sum(card.cost for card in play)
+        remaining_energy = energy - cost
+        remaining = list(hand)
+        for card in play:
+            remaining.remove(card)
+        remaining = [card for card in remaining if card.cost <= remaining_energy]
+
+        # finalize the current_term if possible
+        cards_finalizing_term = [card for card in remaining if card.operator == '+']
+        if cards_finalizing_term:
+            finalizer = sorted(cards_finalizing_term, key=lambda card: card.cost)[0]
+            play.append(finalizer)
+
+        return play
 
 
 def card_permutations(hand):
