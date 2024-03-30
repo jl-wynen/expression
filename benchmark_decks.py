@@ -13,24 +13,29 @@ CARD_NAMES = ('plus1', 'plus5', 'plus10', 'mult3', 'mult10', 'div5', 'div10')
 N_GAMES = 15
 
 CUSTOM_DECKS = [
-    dict(
-        plus1=4,
-        plus5=5,
-        plus10=3,
-        mult3=6,
-        mult10=3,
-        div5=2,
-        div10=1,
-    ),
-    dict(
-        plus1=3,
-        plus5=4,
-        plus10=3,
-        mult3=4,
-        mult10=4,
-        div5=4,
-        div10=2,
-    )
+    # hand-made
+    # dict(
+    #     plus1=4,
+    #     plus5=5,
+    #     plus10=3,
+    #     mult3=6,
+    #     mult10=3,
+    #     div5=2,
+    #     div10=1,
+    # ),
+    # dict(
+    #     plus1=3,
+    #     plus5=4,
+    #     plus10=3,
+    #     mult3=4,
+    #     mult10=4,
+    #     div5=4,
+    #     div10=2,
+    # ),
+    # found by rng
+    {'plus5': 5, 'plus10': 2, 'div10': 2, 'plus1': 2, 'div5': 1, 'mult10': 3},
+    {'plus5': 5, 'plus10': 3, 'div10': 2, 'plus1': 2, 'div5': 1, 'mult10': 3},
+    {'plus5': 5, 'plus10': 3, 'div10': 1, 'plus1': 2, 'div5': 1, 'mult10': 3},
 ]
 
 
