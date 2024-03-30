@@ -62,6 +62,12 @@ class Match:
                           self.end_x + further_space, self.end_y,
                           width=2, color=(255, 255, 255), batch=self.batch)
 
+    def add_winner_name(self, winner):
+        self.winner_label = pyglet.text.Label(text=str(winner), font_size=self.fontsize,
+                                             x=self.end_x + 20, y=self.end_y,
+                                             anchor_x='left', anchor_y="center", batch=self.batch,
+                                             color=(255, 153, 25, 255))
+
     def __repr__(self):
 
         return f"M {self.top_name} {self.bottom_name} {self.match_n}"
@@ -335,6 +341,42 @@ class DoubleBracket:
                     match.line3.color = on_color
                     match.line4.color = on_color
 
+        if "W30" in self.tournament_state and "W27" in self.tournament_state:
+            # Have  played first finals
+            if self.tournament_state["W30"] == self.tournament_state["W27"]:
+                # No need to play second final, remove it, except for winners name
+                second_final = find_match("31", self.all_matches)
+                second_final.line1.opacity = 0
+                second_final.line2.opacity = 0
+                second_final.line3.opacity = 0
+                second_final.line4.opacity = 0
+
+                second_final.bottom_player_label.opacity = 0
+                second_final.match_label.opacity = 0
+
+                on_color = (255, 153, 25)
+                second_final.top_player_label.opacity = 255
+                second_final.top_player_label.color = on_color
+
+                winner = self.tournament_state["W30"]
+
+                for match in self.all_matches:
+                    if match.top_player_label.text == winner:
+                        match.top_player_label.color = (255, 153, 25)
+
+        if "W31" in self.tournament_state and "L31" in self.tournament_state:
+            second_final = find_match("31", self.all_matches)
+            second_final.add_winner_name(self.tournament_state["W31"])
+
+            winner = self.tournament_state["W31"]
+            for match in self.all_matches:
+                if match.top_player_label.text == winner:
+                    match.top_player_label.color = (255, 153, 25)
+
+                if match.bottom_player_label.text == winner:
+                    match.bottom_player_label.color = (255, 153, 25)
+
+        # Lower opacity of all who lost
         for match_code in self.tournament_state:
             if match_code[0] == "L" and len(match_code) > 1:
                 match = find_match(match_code, self.all_matches)
@@ -342,7 +384,6 @@ class DoubleBracket:
                 player_name = self.tournament_state[match_code]
 
                 if match.top_player_label.text == player_name:
-
                     match.top_player_label.opacity = 130
 
                 if match.bottom_player_label.text == player_name:

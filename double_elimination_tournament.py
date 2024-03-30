@@ -199,7 +199,7 @@ for match_index in range(highest_match_index, 31):
 # code for detecting if last match needed
 
 # if W30 is the W29 player
-if tournament_status["W30"] == tournament_status["W29"]:
+if tournament_status["W30"] == tournament_status["W29"] and "W31" not in tournament_status:
     # Need to run a last game
 
     top_contestant_agent = contestant_agents[second_finals.top]()
@@ -225,9 +225,23 @@ if tournament_status["W30"] == tournament_status["W29"]:
         tournament_status["L" + str(31)] = second_finals.top
         tournament_status["W" + str(31)] = second_finals.bottom
 
+    with open(tournament_results, "w") as f:
+        json.dump(tournament_status, f)
+
     print("Winner: ", tournament_status["W31"])
 
 else:
     # Winner bracket from 27 won
     print("Winner: ", tournament_status["W30"])
 
+tournament_state = {}
+tournament_state.update(spot_assignments)
+tournament_state.update(tournament_status)
+
+# Show final bracket
+game_window.clear()
+top_score, bottom_score = run_expression(game_window=game_window,
+                                         tournament_state=tournament_state,
+                                         match_number=str(32),
+                                         positive_player=None,
+                                         negative_player=None)
