@@ -18,6 +18,7 @@ python test_expression.py
 - right arrow: increase card speed
 - left arrow: decrease card speed
 - b: show bracket when running tournament
+- d: show decks
 
 ## Playing as a human
 Use the mouse, and click the little area in the right top and bottom corner to play the selected cards. Play as human by setting positive or negative player to None in test_expression.py 
