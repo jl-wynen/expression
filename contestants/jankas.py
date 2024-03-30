@@ -43,9 +43,20 @@ class Agent(base_agent.BaseAgent):
         return play
 
 
-def card_permutations(hand):
+def card_permutations(hand, current_term):
     for indexes in itertools.permutations(range(len(hand))):
-        yield [hand[index] for index in indexes]
+        perm = [hand[index] for index in indexes]
+        if not perm:
+            yield perm
+            continue
+        if current_term <= 0:
+            if perm[0].operator != '*':
+                yield perm
+            # Doesn't make sense to multiply a negative term
+        else:
+            if perm[0].operator != '/':
+                yield perm
+            # Doesn't make sense to divide a positive term.
 
 
 def highest_value_play(hand, energy, locked_term, current_term):
@@ -53,9 +64,7 @@ def highest_value_play(hand, energy, locked_term, current_term):
     candidate_value = locked_term + current_term
     candidate_cost = 0
     kernel = functools.partial(check_play, energy=energy, locked_term=locked_term, current_term=current_term)
-    results = map(kernel, card_permutations(hand))
-
-    for to_play, score, cost in results:
+    for to_play, score, cost in map(kernel, card_permutations(hand, current_term)):
         if (score > candidate_value) or (
                 score == candidate_value and (len(to_play) < len(candidate) or cost < candidate_cost)):
             candidate = to_play
