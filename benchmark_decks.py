@@ -49,7 +49,7 @@ def run_game(deck, opponent, n_runs):
         try:
             res = subprocess.run(
                 ['python', 'benchmark_jankas.py', f'--n_runs={n_runs}',
-                 f'--bottom_agent={opponent}', f'--deck={serialize_deck(deck)}'],
+                 f'--opponent={opponent}', f'--deck={serialize_deck(deck)}'],
                 stdout=subprocess.PIPE,
                 timeout=20,
             )
@@ -91,7 +91,7 @@ def modified_decks(base, n):
 
 
 def main() -> None:
-    random.seed(712)
+    random.seed(311)
     decks = list(make_decks(0))
     decks.extend(modified_decks(CUSTOM_DECKS[-1], 30))
     decks.extend(CUSTOM_DECKS)

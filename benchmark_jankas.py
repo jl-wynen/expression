@@ -93,7 +93,7 @@ def parse_args():
     parser.add_argument('--n_runs', type=int, default=1)
     parser.add_argument('--verbose', action='store_true')
     parser.add_argument('--pause', action='store_true')
-    parser.add_argument('--bottom_agent', type=str)
+    parser.add_argument('--opponent', type=str)
     parser.add_argument('--seed', type=int, default=None)
     parser.add_argument('--deck', type=parse_deck)
     args = parser.parse_args()
@@ -123,7 +123,7 @@ def main() -> None:
                                                          verbose=args.verbose,
                                                          pause=args.pause,
                                                          top_agent=jankas.Agent(deck=args.deck),
-                                                         bottom_agent=make_agent(args.bottom_agent),
+                                                         bottom_agent=make_agent(args.opponent),
                                                          )
     print(f'{top_score},{bottom_score}')
 
