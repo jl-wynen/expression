@@ -90,11 +90,19 @@ class Game:
 
     def ready_turn(self):
 
+        # Balance first and second player by giving an energy sooner to second player (positive)
+        if self.current_player.is_negative:
+            gain_turn = [0, 1, 3, 6, 9, 12, 15, 18, 21, 24]
+        else:
+            # Get a resource earlier, back on normal track after
+            gain_turn = [0, 1, 3, 6, 8, 12, 15, 18, 21, 24]
+
+        gain_this_turn = self.current_player.turn_number in gain_turn
+
         # increase energy
         self.current_player.turn_number += 1
 
-        gain_turn = (self.current_player.turn_number + 2) % 3 == 0 or self.current_player.max_resources < 2
-        if self.current_player.max_resources < 10 and gain_turn:
+        if self.current_player.max_resources < 10 and gain_this_turn:
             self.current_player.increment_max_resources()
 
         # Give the second player a faster energy increase

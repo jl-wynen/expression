@@ -88,11 +88,11 @@ class GameHistoryVisualizer:
                     continue
 
                 if not self.positive_checkbox:
-                    if data_dict["score"][-1] < 0:
+                    if data_dict["score"][-1] > 0:
                         continue
 
                 if not self.negative_checkbox:
-                    if data_dict["score"][-1] > 0:
+                    if data_dict["score"][-1] < 0:
                         continue
 
                 self.data_subset.append(data_dict["score"])
@@ -362,7 +362,8 @@ class GameHistoryVisualizer:
             self.negative_checkbox = change.new
             self.plot_subset()
 
-        display(widgets.HBox([turns_slider, runs_slider, check_positive, check_negative]))
+        #display(widgets.HBox([turns_slider, runs_slider, check_positive, check_negative]))
+        display(widgets.HBox([turns_slider, check_positive, check_negative]))
         turns_slider.observe(update_plot_turn, names='value')
         runs_slider.observe(update_plot_run, names='value')
         check_positive.observe(update_plot_positive, names='value')
