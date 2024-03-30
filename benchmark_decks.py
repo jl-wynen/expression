@@ -33,6 +33,7 @@ CUSTOM_DECKS = [
     #     div10=2,
     # ),
     # found by rng
+    {'plus5': 5, 'plus10': 4, 'div10': 0, 'plus1': 3, 'div5': 0, 'mult10': 3},
     {'plus5': 5, 'plus10': 2, 'div10': 2, 'plus1': 2, 'div5': 1, 'mult10': 3},
     {'plus5': 5, 'plus10': 3, 'div10': 2, 'plus1': 2, 'div5': 1, 'mult10': 3},
     {'plus5': 5, 'plus10': 3, 'div10': 1, 'plus1': 2, 'div5': 1, 'mult10': 3},

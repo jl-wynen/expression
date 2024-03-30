@@ -18,7 +18,6 @@ class Agent(base_agent.BaseAgent):
             self.deck = dict(self._user_deck)
         else:
             choices = [
-                {'plus5': 5, 'plus10': 2, 'div10': 2, 'plus1': 2, 'div5': 1, 'mult10': 3},
                 {'plus5': 5, 'plus10': 3, 'div10': 2, 'plus1': 2, 'div5': 1, 'mult10': 3},
                 {'plus5': 5, 'plus10': 3, 'div10': 1, 'plus1': 2, 'div5': 1, 'mult10': 3},
             ]
