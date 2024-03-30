@@ -118,9 +118,8 @@ class ActiveCard(pyglet.sprite.Sprite):
 
         try:
             imgobj = get_card_resource(self.card)
-            #print("success!")
         except:
-            print("failed")
+            print("failed to load card resource, use back instead")
             imgobj = resources.card_back
 
         """

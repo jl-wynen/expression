@@ -14,6 +14,7 @@ from game import player_objects
 from game import graph
 from game import moving_text
 from game.bracket import DoubleBracket
+from game.deck_viewer import DeckView
 
 from contestants import template_fast
 from contestants import template_reckless
@@ -45,6 +46,7 @@ def run_expression(game_window, score_limit=2, tournament_state=None, match_numb
     main_batch = pyglet.graphics.Batch()
     text_batch = pyglet.graphics.Batch()
     bracket_batch = pyglet.graphics.Batch()
+    deck_view_batch = pyglet.graphics.Batch()
 
     global player_top_score, player_bottom_score, global_score_limit
     global_score_limit = score_limit
@@ -205,6 +207,7 @@ def run_expression(game_window, score_limit=2, tournament_state=None, match_numb
                                             x=15, y=800-30,
                                             anchor_x='left', anchor_y="center", batch=text_batch,
                                             color=(255, 255, 255, 255))
+        positive_win_label.text = f"Positive player: {player_top.name} won!"
 
         # bottom
         if global_negative_player is not None:
@@ -243,6 +246,7 @@ def run_expression(game_window, score_limit=2, tournament_state=None, match_numb
                                                font_size=28, x=15, y=30,
                                                anchor_x='left', anchor_y="center", batch=text_batch,
                                                color=(255, 255, 255, 255))
+        negative_win_label.text = f"Negative player: {player_bottom.name} won!"
 
         """
         player_top.po.set_deck_position(util.Point(800, 700))
@@ -271,6 +275,13 @@ def run_expression(game_window, score_limit=2, tournament_state=None, match_numb
             bracket_mode = True
         else:
             bracket_mode = False
+
+        # deck viewer
+        global deck_viewer, deck_mode
+        deck_viewer = DeckView(global_positive_deck, global_negative_deck, deck_view_batch,
+                               player_top_name=player_top.name, player_bottom_name=player_bottom.name)
+        deck_viewer.setup()
+        deck_mode = False
 
         # Start a game
         global game
@@ -305,7 +316,7 @@ def run_expression(game_window, score_limit=2, tournament_state=None, match_numb
     @game_window.event
     def on_key_press(symbol, modifiers):
         global continue_turn, auto_play, turn_time, stack_time, card_speed, card_scale_speed
-        global bracket_mode, bracket
+        global bracket_mode, bracket, deck_mode
 
         if symbol == key.SPACE:
             continue_turn = True
@@ -315,6 +326,9 @@ def run_expression(game_window, score_limit=2, tournament_state=None, match_numb
 
             if bracket.tournament_state is None:
                 bracket_mode = False
+
+        if symbol == key.D:
+            deck_mode = not deck_mode
 
         if symbol == key.ENTER:
             auto_play = not auto_play
@@ -351,7 +365,12 @@ def run_expression(game_window, score_limit=2, tournament_state=None, match_numb
         # Draw background
         image.blit(0, 0)
 
-        global bracket, bracket_mode
+        global bracket, bracket_mode, deck_mode
+
+        if deck_mode:
+            deck_view_batch.draw()
+            return
+
         if bracket_mode:
             bracket_batch.draw()
             return
@@ -381,11 +400,11 @@ def run_expression(game_window, score_limit=2, tournament_state=None, match_numb
         global turn_ready, continue_turn, took_turn, drew_card
         global negative_player_won, positive_player_won, game_over_timer
         global commit_pressed, circle_on_color, circle_off_color
-        global bracket, bracket_mode
+        global bracket, bracket_mode, deck_mode
 
         wait_for_human = False
 
-        if bracket_mode:
+        if bracket_mode or deck_mode:
             return
 
         time += dt
@@ -502,8 +521,8 @@ def run_expression(game_window, score_limit=2, tournament_state=None, match_numb
                 expression_text.text = game.expression
 
                 evaluation = game.current_value + game.current_term
-                expression_evaluation_text.text = " = " + str(evaluation)
-                term_text.text = sign_text + str(game.current_term)
+                expression_evaluation_text.text = " = " + f"{evaluation:.1f}"
+                term_text.text = sign_text + f"{game.current_term:.1f}"
                 term_text.opacity = 0
                 term_text.target_pos = game.other_player.po.term_text_position
 
