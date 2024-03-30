@@ -5,6 +5,8 @@ from pathlib import Path
 import random
 import json
 
+from rich.progress import track
+
 BASE_PATH = Path(__file__).resolve().parent
 OUT_FILE = BASE_PATH / 'deck_benchmark.json'
 CARD_NAMES = ('plus1', 'plus5', 'plus10', 'mult3', 'mult10', 'div5', 'div10')
@@ -75,7 +77,8 @@ def main() -> None:
             for ideck, deck in enumerate(decks)
             for opponent in ('template_fast', 'template_careful', 'template_reckless')
         }
-        for future in concurrent.futures.as_completed(futures):
+        for future in track(concurrent.futures.as_completed(futures),
+                            total=len(futures)):
             ideck, opponent = futures[future]
             results[ideck][1][opponent] = future.result()
 
