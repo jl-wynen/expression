@@ -201,7 +201,7 @@ def run_expression(game_window, score_limit=2, tournament_state=None, match_numb
 
         player_top.po.set_commit_circle(top_circle)
 
-        player_top_name = pyglet.text.Label(text=player_top.name, font_size=28,
+        player_top_name = pyglet.text.Label(text=str(player_top_score) + " "+ player_top.name, font_size=28,
                                             x=15, y=800-30,
                                             anchor_x='left', anchor_y="center", batch=text_batch,
                                             color=(255, 255, 255, 255))
@@ -239,7 +239,8 @@ def run_expression(game_window, score_limit=2, tournament_state=None, match_numb
 
         player_bottom.po.set_commit_circle(bottom_circle)
 
-        player_bottom_name = pyglet.text.Label(text=player_bottom.name, font_size=28, x=15, y=30,
+        player_bottom_name = pyglet.text.Label(text=str(player_bottom_score) + " "+ player_bottom.name,
+                                               font_size=28, x=15, y=30,
                                                anchor_x='left', anchor_y="center", batch=text_batch,
                                                color=(255, 255, 255, 255))
 

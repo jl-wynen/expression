@@ -150,8 +150,12 @@ class Player:
                 for card_element in game_info["last_played_hand"]:
                     card_element.make_negative()
 
-        agent_answer = self.agent.play_turn(hand=given_hand, energy=energy, game_info=game_info,
-                                            locked_term=current_value, current_term=current_term)
+        try:
+            agent_answer = self.agent.play_turn(hand=given_hand, energy=energy, game_info=game_info,
+                                                locked_term=current_value, current_term=current_term)
+        except:
+            print(f"Error while running Agent for {self.name}!")
+            agent_answer = []
 
         if agent_answer is None:
             self.record_energy_spent(0)
