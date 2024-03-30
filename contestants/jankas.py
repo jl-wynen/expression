@@ -25,7 +25,8 @@ class Agent(base_agent.BaseAgent):
         )
 
     def play_turn(self, hand, energy, game_info, locked_term, current_term):
-        return highest_value_play(hand, energy, locked_term, current_term)
+        eligible = [card for card in hand if card.cost <= energy]
+        return highest_value_play(eligible, energy, locked_term, current_term)
 
 
 def card_permutations(hand):
