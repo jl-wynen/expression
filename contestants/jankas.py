@@ -1,5 +1,6 @@
 import functools
 import itertools
+import random
 
 import numpy as np
 
@@ -16,15 +17,12 @@ class Agent(base_agent.BaseAgent):
         if self._user_deck is not None:
             self.deck = dict(self._user_deck)
         else:
-            self.deck = dict(
-                plus1=4,
-                plus5=5,
-                plus10=3,
-                mult3=6,
-                mult10=3,
-                div5=2,
-                div10=1,
-            )
+            choices = [
+                {'plus5': 5, 'plus10': 2, 'div10': 2, 'plus1': 2, 'div5': 1, 'mult10': 3},
+                {'plus5': 5, 'plus10': 3, 'div10': 2, 'plus1': 2, 'div5': 1, 'mult10': 3},
+                {'plus5': 5, 'plus10': 3, 'div10': 1, 'plus1': 2, 'div5': 1, 'mult10': 3},
+            ]
+            self.deck = choices[random.randint(0, len(choices) - 1)]
 
     def play_turn(self, hand, energy, game_info, locked_term, current_term):
         eligible = [card for card in hand if card.cost <= energy]
